@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/font_white">
+    <com.ashokvarma.bottomnavigation.BottomNavigationBar
+        android:id="@+id/self_info_bottom_navigation_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+    </com.ashokvarma.bottomnavigation.BottomNavigationBar>
+    <LinearLayout
+        android:fitsSystemWindows="true"
+        android:id="@+id/fill_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/self_info_bottom_navigation_bar"
+        android:orientation="vertical">
+    </LinearLayout>
+</RelativeLayout>

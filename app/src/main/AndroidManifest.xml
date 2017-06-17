@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.iplay.iplayapplication">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/> 
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <application
+        android:name="org.litepal.LitePalApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".UI.LoginActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".UI.RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".UI.CodeVerifyActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".UI.RegisterInfoActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".UI.SelfPage.SelfMainPage"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".UI.HomePage.Remark.RemarkActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".UI.Media.CameraActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".UI.Media.PhotoEditActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".UI.Media.VideoPlayerActivity" />
+    </application>
+
+</manifest>

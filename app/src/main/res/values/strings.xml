@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">IPlayApplication</string>
+    <string name="login_button">登录</string>
+    <string name="passwd_hint">密码</string>
+    <string name="account_hint">手机号、账号或邮箱</string>
+    <string name="dont_have_account">还没有账户?</string>
+    <string name="register_link">注册</string>
+    <string name="register_back">返回</string>
+    <string name="activity_text">\t东方Project的基础是日本同人游戏社团上海爱丽丝幻乐团所制作的一系列游戏，并在之后发展成了覆盖游戏、动漫、音乐、文学等诸多方面的一个领域。在该领域中，ZUN自行创作、ZUN与朋友合作和以ZUN的名义出版的作品叫做原作（一次设定），其他爱好者们自发进行的创作叫做二次创作。
+\n\t原作以游戏为主，其中分为旧作与新作。
+\n\t旧作指的是编号为TH01-TH05的作品。在国内也被称为黑历史。这五部作品的设定、人物、世界观、游戏系统都与新作有较大的不同。当时ZUN的社团名为ZUNSOFT，运行平台为PC-98（一种日本产销的计算机架构）。其中第一作作东方灵异传是一个打砖块游戏，之后四作均为弹幕射击（也就是STG），游戏系统也趋于完善，奠定了新作的基础。</string>
+</resources>

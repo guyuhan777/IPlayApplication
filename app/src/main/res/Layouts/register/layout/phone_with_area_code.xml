@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_weight="2">
+        <TextView
+            android:id="@+id/zone_text"
+            android:padding="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_normal"
+            android:textStyle="bold"
+            android:text="CN +86"
+            android:textColor="@color/blue_hint"
+            android:layout_gravity="center"
+            android:gravity="center"/>
+            <include layout="@layout/seperateline_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="7"
+        android:gravity="center"
+        >
+        <EditText
+            android:layout_marginTop="5dp"
+            android:id="@+id/phone_edit"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_normal"
+            android:inputType="phone"
+            android:hint="手机号"
+            android:layout_alignBaseline="@+id/zone_text">
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+</merge>

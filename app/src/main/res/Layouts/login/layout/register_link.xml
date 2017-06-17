@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="5.5"
+        android:text="@string/dont_have_account"
+        android:textSize="18dp"
+        android:gravity="right|center_vertical"
+        />
+    <TextView
+        android:id="@+id/register_text"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4.5"
+        android:text="@string/register_link"
+        android:textColor="@color/blue_hint"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_marginLeft="5dp" />
+</LinearLayout>

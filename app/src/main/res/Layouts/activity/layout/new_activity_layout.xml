@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <com.iplay.iplayapplication.adapter.nActivityAdapter.commonComponent.ActivityTitlePart
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.iplay.iplayapplication.adapter.nActivityAdapter.commonComponent.ActivityTitlePart>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/activity_main_photo"
+            android:src="@drawable/shenzi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"/>
+    </FrameLayout>
+    <com.iplay.iplayapplication.adapter.nActivityAdapter.commonComponent.ActivityMainFunctionPart
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <com.iplay.iplayapplication.adapter.nActivityAdapter.commonComponent.ActivityContentPart
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

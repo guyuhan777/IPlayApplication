@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+   <com.iplay.iplayapplication.UI.SelfPage.SelfInfoTitle
+       android:id="@+id/self_info_title"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content" />
+   <com.iplay.iplayapplication.customComponent.BounceScrollView
+       android:id="@+id/self_info_brief_scroll_view"
+       android:layout_below="@id/self_info_title"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:scrollbars="none">
+      <LinearLayout
+          android:orientation="vertical"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+         <android.support.v7.widget.CardView
+             android:layout_margin="5dp"
+             app:cardCornerRadius="5dp"
+             app:cardElevation="5dp"
+             app:contentPadding="5dp"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/font_white">
+               <com.iplay.iplayapplication.UI.SelfPage.commonComponent.SelfInfoBriefPart
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content" />
+               <include
+                   layout="@layout/seperateline_horizontal" />
+               <com.iplay.iplayapplication.UI.SelfPage.commonComponent.SelfInfoCirclePart
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content" />
+            </LinearLayout>
+         </android.support.v7.widget.CardView>
+         <android.support.v7.widget.CardView
+             android:layout_margin="5dp"
+             app:cardCornerRadius="5dp"
+             app:cardElevation="5dp"
+             app:contentPadding="5dp"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+            <include layout="@layout/self_info_function_bar_list" />
+         </android.support.v7.widget.CardView>
+         <android.support.v7.widget.CardView
+             android:layout_margin="5dp"
+             app:cardCornerRadius="5dp"
+             app:cardElevation="5dp"
+             app:contentPadding="5dp"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+            <com.iplay.iplayapplication.UI.SelfPage.commonComponent.SelfInfoFunctionBarList
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+         </android.support.v7.widget.CardView>
+         <android.support.v7.widget.CardView
+             android:layout_margin="5dp"
+             app:cardCornerRadius="5dp"
+             app:cardElevation="5dp"
+             app:contentPadding="5dp"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+            <com.iplay.iplayapplication.UI.SelfPage.commonComponent.SelfInfoFunctionBarList
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+         </android.support.v7.widget.CardView>
+      </LinearLayout>
+   </com.iplay.iplayapplication.customComponent.BounceScrollView>
+</RelativeLayout>

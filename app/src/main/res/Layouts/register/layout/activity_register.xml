@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_register"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true">
+    <LinearLayout
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="电话"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"/>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/seperateline_horizontal"/>
+        </LinearLayout>
+        <com.iplay.iplayapplication.customComponent.EditTextWithLabel
+            android:id="@+id/zone_phone"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/edit_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </com.iplay.iplayapplication.customComponent.EditTextWithLabel>
+        <Button
+            android:id="@+id/register_button_next"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/login_button_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_normal"
+            android:textColor="@color/font_white"
+            android:textStyle="bold"
+            android:text="下一步"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">  
+        </LinearLayout>  
+    </LinearLayout>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include layout="@layout/seperateline_horizontal"/>
+        <include layout="@layout/register_back_lv1" />
+    </LinearLayout>
+</RelativeLayout>

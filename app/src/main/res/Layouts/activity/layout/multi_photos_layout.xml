@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <com.iplay.iplayapplication.adapter.nActivityAdapter.commonComponent.ActivityTitlePart
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.iplay.iplayapplication.adapter.nActivityAdapter.commonComponent.ActivityTitlePart>
+    <com.iplay.iplayapplication.customComponent.autoChangeImageView.SquareRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </android.support.v4.view.ViewPager>
+    </com.iplay.iplayapplication.customComponent.autoChangeImageView.SquareRelativeLayout>
+    <com.itsronald.widget.ViewPagerIndicator
+        android:id="@+id/view_pager_indicator"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:viewPagerId="@id/view_pager"
+        app:dotRadius="4dp"
+        app:selectedDotColor="@color/blue_hint"
+        app:unselectedDotColor="@color/login_button_color"/>
+    <com.iplay.iplayapplication.adapter.nActivityAdapter.commonComponent.ActivityMainFunctionPart
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <com.iplay.iplayapplication.adapter.nActivityAdapter.commonComponent.ActivityContentPart
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
