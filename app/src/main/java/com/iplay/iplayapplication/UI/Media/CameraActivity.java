@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,8 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
     private static final int TAKE_PHOTO_TYPE = 0;
     private static final int TAKE_VIDEO_TYPE = 1;
 
+    private ImageView camera_face_change_button;
+
     private int currentType = TAKE_PHOTO_TYPE;
 
     private int videoWidth, videoHeight;
@@ -75,6 +78,8 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
 
     private static final String TAG = "CameraActivity";
 
+    private int cameraPosition = 1;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +96,9 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
         camera_video_nav = (TextView) findViewById(R.id.camera_video_nav);
         camera_video_nav.setOnClickListener(this);
         camera_type_label = (TextView) findViewById(R.id.camera_type_label);
+
+        camera_face_change_button = (ImageView) findViewById(R.id.camera_facce_change_button);
+        camera_face_change_button.setOnClickListener(this);
 
         mProgressBar = (BothWayProgressBar) findViewById(R.id.camera_progress);
         mProgressBar.setOnProgressEndListener(this);
@@ -126,6 +134,46 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
 
                 }
                 break;
+            case R.id.camera_facce_change_button:
+                int cameraCount = 0;
+                Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+                cameraCount = Camera.getNumberOfCameras();
+                for(int i = 0;i<cameraCount;i++){
+                    Camera.getCameraInfo(i,cameraInfo);
+                    if(cameraPosition == 1){
+                        if(cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT){
+                            camera.stopPreview();
+                            camera.release();
+                            camera = null;
+                            camera = Camera.open(i);
+                            cameraParaInit();
+                            try{
+                                camera.setPreviewDisplay(sv_main_surface.getHolder());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                            camera.startPreview();
+                            cameraPosition = 0;
+                            break;
+                        }
+                    }else{
+                        if(cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK){
+                            camera.stopPreview();
+                            camera.release();
+                            camera = null;
+                            camera = Camera.open(i);
+                            cameraParaInit();
+                            try{
+                                camera.setPreviewDisplay(sv_main_surface.getHolder());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                            camera.startPreview();
+                            cameraPosition = 1;
+                            break;
+                        }
+                    }
+                }
             case R.id.camera_photo_nav:
                 currentType = TAKE_PHOTO_TYPE;
                 camera_type_label.setText("照片");
@@ -276,12 +324,8 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
     }
 
 
-    private class PhotoCallBack implements SurfaceHolder.Callback{
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-            if(camera == null){
-                camera = Camera.open();
-            }
+    private void cameraParaInit(){
+        if(camera!=null){
             Camera.Parameters parameters=camera.getParameters();
             List<String> focusModes = parameters.getSupportedFocusModes();
             if (focusModes != null) {
@@ -292,6 +336,16 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
             }
             camera.setParameters(parameters);
             camera.setDisplayOrientation(90);
+        }
+    }
+
+    private class PhotoCallBack implements SurfaceHolder.Callback{
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            if(camera == null){
+                camera = Camera.open();
+            }
+            cameraParaInit();
             try{
                 camera.setPreviewDisplay(sv_main_surface.getHolder());
             } catch (IOException e) {
