@@ -18,8 +18,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.iplay.iplayapplication.R;
+import com.iplay.iplayapplication.assistance.ImgUtils;
 import com.iplay.iplayapplication.customComponent.doubleWayProgressBar.BothWayProgressBar;
 import com.iplay.iplayapplication.mActivity.MyActivity;
+import com.iplay.iplayapplication.util.Msg;
 
 import java.io.File;
 import java.io.IOException;
@@ -150,7 +152,18 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             //Bitmap bm = BitmapFactory.decodeByteArray(data,0,data.length);
-            PhotoEditActivity.start(CameraActivity.this);
+            //PhotoEditActivity.start(CameraActivity.this);
+            Msg<String> msg = ImgUtils.saveImageToGallery(getApplicationContext(),data);
+            if(msg == null){
+                Toast.makeText(CameraActivity.this,"Unknown Error",Toast.LENGTH_SHORT).show();
+            }else{
+                if(msg.MSG_TYPE == Msg.MSG_TYPE_FAILURE){
+                    Toast.makeText(CameraActivity.this,"Photo Save Failure",Toast.LENGTH_SHORT).show();
+                }else if(msg.MSG_TYPE == Msg.MSG_TYPE_SUCCESS){
+                    Toast.makeText(CameraActivity.this,"Photo Save Success",Toast.LENGTH_SHORT).show();
+                    PhotoEditActivity.start(CameraActivity.this,msg.getMsg());
+                }
+            }
             /*if(ImgUtils.saveImageToGallery(getApplicationContext(),data)){
                 Log.d("photoTake","SUCCESS");
             }else{

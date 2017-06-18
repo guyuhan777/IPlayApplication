@@ -2,6 +2,7 @@ package com.iplay.iplayapplication.UI.Media;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.iplay.iplayapplication.R;
+import com.iplay.iplayapplication.assistance.BitmapHolder;
 import com.iplay.iplayapplication.assistance.ImgUtils;
 import com.iplay.iplayapplication.customComponent.autoChangeImageView.TouchImageView;
 import com.iplay.iplayapplication.mActivity.MyActivity;
@@ -40,6 +42,8 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
 
         crop_img = (TouchImageView) findViewById(R.id.crop_img);
 
+        Bitmap bitmap = BitmapHolder.get(ImgUtils.BITMAP_KEY);
+        crop_img.setImageBitmap(bitmap);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         width = dm.widthPixels;
@@ -55,8 +59,9 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
 
 
 
-    public static void start(Context context){
+    public static void start(Context context,String fileName){
         Intent intent = new Intent(context,PhotoEditActivity.class);
+        intent.putExtra(PHOTO_KEY,fileName);
         context.startActivity(intent);
     }
 
