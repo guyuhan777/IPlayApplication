@@ -174,6 +174,20 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
                         }
                     }
                 }
+                if(currentType == TAKE_PHOTO_TYPE){
+                    camera_type_label.setText("照片");
+                    camera_photo_nav.setTextColor(getResources().getColor(R.color.blue_hint));
+                    camera_video_nav.setTextColor(getResources().getColor(R.color.grey));
+                    camera_button.setOnTouchListener(null);
+                    camera_button.setOnClickListener(this);
+                }else if(currentType == TAKE_PHOTO_TYPE){
+                    camera_type_label.setText("视频");
+                    camera_video_nav.setTextColor(getResources().getColor(R.color.blue_hint));
+                    camera_photo_nav.setTextColor(getResources().getColor(R.color.grey));
+                    camera_button.setOnClickListener(null);
+                    camera_button.setOnTouchListener(this);
+                }
+                break;
             case R.id.camera_photo_nav:
                 currentType = TAKE_PHOTO_TYPE;
                 camera_type_label.setText("照片");
@@ -201,7 +215,7 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
         public void onPictureTaken(byte[] data, Camera camera) {
             //Bitmap bm = BitmapFactory.decodeByteArray(data,0,data.length);
             //PhotoEditActivity.start(CameraActivity.this);
-            Msg<String> msg = ImgUtils.saveImageToGallery(getApplicationContext(),data);
+            Msg<String> msg = ImgUtils.saveImageToGallery(getApplicationContext(),data,cameraPosition);
             if(msg == null){
                 Toast.makeText(CameraActivity.this,"Unknown Error",Toast.LENGTH_SHORT).show();
             }else{
@@ -297,7 +311,6 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
                                 Toast.makeText(this, "取消录制", Toast.LENGTH_SHORT).show();
                                 mProgressBar.setCancel(false);
                             }
-
                             ret = false;
                         }
                         break;
@@ -342,6 +355,7 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
     private class PhotoCallBack implements SurfaceHolder.Callback{
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
+            Log.d(TAG,"surface created");
             if(camera == null){
                 camera = Camera.open();
             }
@@ -353,6 +367,7 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
             }
             //开启预览效果
             camera.startPreview();
+            mMediaRecorder = new MediaRecorder();
         }
 
         @Override
@@ -406,12 +421,17 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
                 mMediaRecorder.setOutputFile(mTargetFile.getAbsolutePath());
                 mMediaRecorder.setPreviewDisplay(sv_main_surface.getHolder().getSurface());
                 //解决录制视频, 播放器横向问题
-                mMediaRecorder.setOrientationHint(90);
+                if(cameraPosition == 1) {
+                    mMediaRecorder.setOrientationHint(90);
+                }else if(cameraPosition == 0){
+                    mMediaRecorder.setOrientationHint(270);
+                }
                 Log.d(TAG,"here");
                 mMediaRecorder.prepare();
                 //正式录制
                 mMediaRecorder.start();
                 isRecording = true;
+                isCancel = false;
             }catch (Exception e){
                 e.printStackTrace();
             }

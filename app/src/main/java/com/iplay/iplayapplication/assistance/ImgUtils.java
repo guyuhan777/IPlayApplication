@@ -22,6 +22,9 @@ import java.io.IOException;
 
 public class ImgUtils {
 
+    private static final int CAMERA_FACE_FRONT = 1;
+    private static final int CAMERA_FACE_BACK = 0;
+
     private static final String TAG = "ImgUtils";
 
     private ImgUtils (){
@@ -81,6 +84,20 @@ public class ImgUtils {
         return false;
     }
 
+    public static Bitmap mirroXTranslate(Bitmap bitmap){
+        Matrix m = new Matrix();
+        float[] matrix_value=new float[]{1f,0f,0f,0f,-1f,0f,0f,0f,1f};
+        m.setValues(matrix_value);
+
+        try{
+            Bitmap ret =  Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),m,true);
+            return ret;
+        }catch (OutOfMemoryError e){
+            Log.d(TAG,"out of memory");
+        }
+        return null;
+    }
+
     public static Bitmap adJustPhotoRotation(Bitmap bmp,final int orientationDegree){
         Matrix m = new Matrix();
         m.setRotate(orientationDegree,(float) bmp.getWidth()/2,(float)bmp.getHeight()/2);
@@ -94,7 +111,7 @@ public class ImgUtils {
 
     }
 
-    public static Msg<String> saveImageToGallery(Context context, byte[] bmp){
+    public static Msg<String> saveImageToGallery(Context context, byte[] bmp,int type){
 
         Msg<String> retMsg = null;
 
@@ -107,7 +124,13 @@ public class ImgUtils {
         File file = new File(appDir, fileName);
 
         Bitmap bitmap = BitmapFactory.decodeByteArray(bmp,0,bmp.length);
-        bitmap = adJustPhotoRotation(bitmap,90);
+
+        bitmap = adJustPhotoRotation(bitmap, 90);
+
+        if(type == CAMERA_FACE_BACK){
+            bitmap = mirroXTranslate(bitmap);
+        }
+
         BitmapHolder.set(BITMAP_KEY,bitmap);
         try{
             FileOutputStream fos = new FileOutputStream(file);

@@ -6,4 +6,5 @@
     <dimen name="text_large">30sp</dimen>
     <dimen name="self_info_text">16sp</dimen>
     <dimen name="activity_content">15sp</dimen>
+    <dimen name="photonail_size">80dp</dimen>
 </resources>

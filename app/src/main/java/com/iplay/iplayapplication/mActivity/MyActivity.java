@@ -1,6 +1,5 @@
 package com.iplay.iplayapplication.mActivity;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,15 +13,12 @@ import android.view.WindowManager;
 
 public class MyActivity extends AppCompatActivity {
 
-    private static Context context;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
             setTranslucentStatus(true);
         }
-        context = getApplicationContext();
     }
 
     private void setTranslucentStatus(boolean on){
@@ -35,9 +31,5 @@ public class MyActivity extends AppCompatActivity {
             winParams.flags &= ~bits;
         }
         window.setAttributes(winParams);
-    }
-
-    public static Context getContext(){
-        return context;
     }
 }

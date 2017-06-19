@@ -1,14 +1,14 @@
 package com.iplay.iplayapplication.customComponent.autoChangeImageView;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 /**
  * Created by admin on 2017/5/31.
  */
 
-public class SquareImageView extends ImageView {
+public class SquareImageView extends AppCompatImageView{
 
     public SquareImageView(Context context) {
         super(context);

@@ -157,9 +157,9 @@ public class RemarkActivity extends MyActivity implements LoadMoreDataListener{
         public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             BaseViewHolder holder;
             if(viewType == TYPE_ITEM){
-                holder = new RemarkViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.remark_item,parent,false));
+                holder = new RemarkViewHolder(LayoutInflater.from(RemarkActivity.this).inflate(R.layout.remark_item,parent,false));
             }else{
-                holder = new ProgressViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.activity_foot,parent,false));
+                holder = new ProgressViewHolder(LayoutInflater.from(RemarkActivity.this).inflate(R.layout.activity_foot,parent,false));
             }
             return holder;
         }

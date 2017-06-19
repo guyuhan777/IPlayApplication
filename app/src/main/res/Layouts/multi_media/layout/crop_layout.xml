@@ -2,9 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/photo_edit_title"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:background="@color/font_white"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <TextView
+            android:id="@+id/photo_edit_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_normal"
+            android:textColor="@color/black"
+            android:layout_gravity="right"
+            android:text="下一步"
+            android:layout_margin="10dp"/>
+    </LinearLayout>
     <com.iplay.iplayapplication.customComponent.autoChangeImageView.SquareRelativeLayout
         android:id="@+id/crop_field"
-        android:fitsSystemWindows="true"
+        android:layout_below="@id/photo_edit_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.iplay.iplayapplication.customComponent.autoChangeImageView.TouchImageView
@@ -14,18 +32,18 @@
             android:scaleType="centerCrop"
             android:adjustViewBounds="true" />
     </com.iplay.iplayapplication.customComponent.autoChangeImageView.SquareRelativeLayout>
-    <LinearLayout
-        android:layout_below="@id/crop_field"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-        <TextView
-            android:id="@+id/edit_button"
-            android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/photo_philter_recycler_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/activity_content"
-            android:text="SAVE"
-            android:gravity="center"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:clipToPadding="false">
+        </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
 </RelativeLayout>

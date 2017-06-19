@@ -42,6 +42,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    compile 'com.github.zomato:androidphotofilters:1.0.1'
     compile 'com.github.ronaldsmartin:Material-ViewPagerIndicator:1.0.4'
     compile 'com.edmodo:cropper:1.0.1'
     compile 'cn.carbs.android:ExpandableTextView:1.0.3'
