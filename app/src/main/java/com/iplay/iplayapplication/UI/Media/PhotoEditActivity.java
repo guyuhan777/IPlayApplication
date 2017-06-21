@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iplay.iplayapplication.R;
+import com.iplay.iplayapplication.UI.HomePage.Activity.FeedsPublishActivity;
 import com.iplay.iplayapplication.assistance.BitmapHolder;
 import com.iplay.iplayapplication.assistance.ImgUtils;
 import com.iplay.iplayapplication.assistance.filter.PhotoFilterAdapter;
@@ -24,9 +26,12 @@ import com.iplay.iplayapplication.assistance.filter.PhotoFilterItem;
 import com.iplay.iplayapplication.assistance.filter.PhotoFilterManager;
 import com.iplay.iplayapplication.customComponent.autoChangeImageView.TouchImageView;
 import com.iplay.iplayapplication.mActivity.MyActivity;
+import com.iplay.iplayapplication.message.MediaTypeMessage;
+import com.iplay.iplayapplication.util.Msg;
 import com.zomato.photofilters.SampleFilters;
 import com.zomato.photofilters.imageprocessors.Filter;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 /**
@@ -47,6 +52,12 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
 
     private RecyclerView photo_filter_recycler_view;
 
+    private Bitmap tempBitmap;
+
+    private MyHandler myHandler;
+
+    private Thread filterThreaad;
+
     static {
         System.loadLibrary("NativeImageProcessor");
     }
@@ -55,6 +66,7 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.crop_layout);
+
         edit_button = (TextView) findViewById(R.id.photo_edit_next);
         edit_button.setOnClickListener(this);
 
@@ -77,6 +89,8 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
         crop_img.setMaxHeight(3*screenWidth);
 
         initHorizontalList();
+
+        myHandler = new MyHandler(this);
     }
 
     private void initHorizontalList() {
@@ -98,14 +112,14 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
                 Bitmap filterBitmap = Bitmap.createBitmap(origin,0,0,origin.getWidth(),origin.getHeight());
                 PhotoFilterItem t1 = new PhotoFilterItem();
                 PhotoFilterItem t2 = new PhotoFilterItem();
-                PhotoFilterItem t3 = new PhotoFilterItem();
+                //PhotoFilterItem t3 = new PhotoFilterItem();
                 PhotoFilterItem t4 = new PhotoFilterItem();
                 PhotoFilterItem t5 = new PhotoFilterItem();
                 PhotoFilterItem t6 = new PhotoFilterItem();
 
                 t1.image = filterBitmap;
                 t2.image = filterBitmap;
-                t3.image = filterBitmap;
+                //t3.image = filterBitmap;
                 t4.image = filterBitmap;
                 t5.image = filterBitmap;
                 t6.image = filterBitmap;
@@ -116,8 +130,8 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
                 t2.filter = SampleFilters.getStarLitFilter();
                 PhotoFilterManager.addThumb(t2);
 
-                t3.filter = SampleFilters.getBlueMessFilter();
-                PhotoFilterManager.addThumb(t3);
+                /*t3.filter = SampleFilters.getBlueMessFilter();
+                PhotoFilterManager.addThumb(t3);*/
 
                 t4.filter = SampleFilters.getAweStruckVibeFilter();
                 PhotoFilterManager.addThumb(t4);
@@ -145,33 +159,63 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
     }
 
     @Override
-    public void onPhotoFilterCallback(Filter filter) {
-        Bitmap origin = BitmapHolder.get(ImgUtils.BITMAP_KEY);
-        Bitmap filterBitmap = Bitmap.createBitmap(origin,0,0,origin.getWidth(),origin.getHeight());
-        crop_img.setImageBitmap(filter.processFilter(filterBitmap));
-        int screenWidth = width;
-        ViewGroup.LayoutParams lp = crop_img.getLayoutParams();
-        lp.width = screenWidth;
-        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        crop_img.setLayoutParams(lp);
-        crop_img.setMaxWidth(screenWidth);
-        crop_img.setMaxHeight(3*screenWidth);
+    public void onPhotoFilterCallback(final Filter filter) {
+        filterThreaad = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap origin = BitmapHolder.get(ImgUtils.BITMAP_KEY);
+                tempBitmap = Bitmap.createBitmap(origin,0,0,origin.getWidth(),origin.getHeight());
+                tempBitmap = filter.processFilter(tempBitmap);
+                myHandler.obtainMessage(0).sendToTarget();
+            }
+        });
+        filterThreaad.start();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.photo_edit_next:
-                if(ImgUtils.saveEditImage(this,crop_img)){
-                    Toast.makeText(this,"Edit Success",Toast.LENGTH_SHORT).show();
+                Msg<String> msg = ImgUtils.saveEditImage(this,crop_img);
+                if(msg.MSG_TYPE == Msg.MSG_TYPE_SUCCESS){
+                    MediaTypeMessage message = new MediaTypeMessage();
+                    message.setFileName(msg.getMsg());
+                    message.setType(MediaTypeMessage.TYPE_SINGLE_PHOTO);
+                    FeedsPublishActivity.start(PhotoEditActivity.this,message);
                     Log.d(TAG,"Edit Success");
-                }else{
+                }else if(msg.MSG_TYPE == Msg.MSG_TYPE_FAILURE){}{
                     Toast.makeText(this,"Edit Failure",Toast.LENGTH_SHORT).show();
                     Log.d(TAG,"Edit Failed");
                 }
                 break;
             default:
                 break;
+        }
+    }
+
+    private static class MyHandler extends Handler{
+        private WeakReference<PhotoEditActivity> mReference;
+
+        private PhotoEditActivity activity;
+
+        public MyHandler(PhotoEditActivity Pactivity){
+            mReference = new WeakReference<>(Pactivity);
+            activity = mReference.get();
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 0:
+                    activity.crop_img.setImageBitmap(activity.tempBitmap);
+                    int screenWidth = activity.width;
+                    ViewGroup.LayoutParams lp = activity.crop_img.getLayoutParams();
+                    lp.width = screenWidth;
+                    lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    activity.crop_img.setLayoutParams(lp);
+                    activity.crop_img.setMaxWidth(screenWidth);
+                    activity.crop_img.setMaxHeight(3*screenWidth);
+            }
         }
     }
 }

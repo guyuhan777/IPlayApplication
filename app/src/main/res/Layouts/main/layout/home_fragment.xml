@@ -8,8 +8,7 @@
         android:id="@+id/up_part"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
         <com.iplay.iplayapplication.UI.HomePage.HomeTitle
             android:id="@+id/home_title"
             android:layout_width="match_parent"

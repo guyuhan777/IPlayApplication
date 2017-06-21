@@ -20,6 +20,7 @@ android {
     sourceSets{
         main{
             res.srcDirs = [
+                    'src/main/res/layouts/activity_publish',
                     'src/main/res/layouts/activity',
                     'src/main/res/layouts/multi_media',
                     'src/main/res/layouts/activity_remark',

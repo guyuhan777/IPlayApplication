@@ -45,7 +45,8 @@ public class ImgUtils {
 
 
 
-    public static boolean saveEditImage(Context context,ImageView view){
+    public static Msg<String> saveEditImage(Context context,ImageView view){
+        Msg<String> retMsg = new Msg<>(Msg.MSG_TYPE_FAILURE);
         String storePath = getStorePath();
         File appDir = new File(storePath);
         if(!appDir.exists()){
@@ -67,7 +68,9 @@ public class ImgUtils {
             context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
             fos = null;
             view.setDrawingCacheEnabled(false);
-            return true;
+            retMsg = new Msg<>(Msg.MSG_TYPE_SUCCESS);
+            retMsg.setMsg(storePath+"/"+fileName);
+            return retMsg;
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
@@ -81,7 +84,7 @@ public class ImgUtils {
             }
             view.setDrawingCacheEnabled(false);
         }
-        return false;
+        return retMsg;
     }
 
     public static Bitmap mirroXTranslate(Bitmap bitmap){
@@ -123,8 +126,10 @@ public class ImgUtils {
         String fileName = System.currentTimeMillis() + ".jpg";
         File file = new File(appDir, fileName);
 
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bmp,0,bmp.length);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
 
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bmp,0,bmp.length,options);
         bitmap = adJustPhotoRotation(bitmap, 90);
 
         if(type == CAMERA_FACE_BACK){
@@ -133,15 +138,15 @@ public class ImgUtils {
 
         BitmapHolder.set(BITMAP_KEY,bitmap);
         try{
-            FileOutputStream fos = new FileOutputStream(file);
+            /*FileOutputStream fos = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG,50,fos);
             fos.flush();
             fos.close();
             Uri uri = Uri.fromFile(file);
-            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));*/
             retMsg = new Msg<>(Msg.MSG_TYPE_SUCCESS,fileName);
             return retMsg;
-        }catch (IOException e){
+        }catch (Exception e){
             e.printStackTrace();
         }
         retMsg = new Msg<>(Msg.MSG_TYPE_FAILURE);
