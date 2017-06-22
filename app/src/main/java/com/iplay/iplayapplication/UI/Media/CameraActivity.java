@@ -219,9 +219,9 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
             if(msg == null){
                 Toast.makeText(CameraActivity.this,"Unknown Error",Toast.LENGTH_SHORT).show();
             }else{
-                if(msg.MSG_TYPE == Msg.MSG_TYPE_FAILURE){
+                if(msg.getMSG_TYPE() == Msg.MSG_TYPE_FAILURE){
                     Toast.makeText(CameraActivity.this,"Photo Save Failure",Toast.LENGTH_SHORT).show();
-                }else if(msg.MSG_TYPE == Msg.MSG_TYPE_SUCCESS){
+                }else if(msg.getMSG_TYPE() == Msg.MSG_TYPE_SUCCESS){
                     Toast.makeText(CameraActivity.this,"Photo Save Success",Toast.LENGTH_SHORT).show();
                     PhotoEditActivity.start(CameraActivity.this,msg.getMsg());
                 }

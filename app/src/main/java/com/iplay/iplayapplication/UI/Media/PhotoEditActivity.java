@@ -70,26 +70,22 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
         edit_button = (TextView) findViewById(R.id.photo_edit_next);
         edit_button.setOnClickListener(this);
 
-        crop_img = (TouchImageView) findViewById(R.id.crop_img);
-
-        Bitmap bitmap = BitmapHolder.get(ImgUtils.BITMAP_KEY);
-        crop_img.setImageBitmap(bitmap);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         width = dm.widthPixels;
 
-        photo_filter_recycler_view = (RecyclerView) findViewById(R.id.photo_philter_recycler_view);
+        crop_img = (TouchImageView) findViewById(R.id.crop_img);
 
-        int screenWidth = width;
+        crop_img.setImageBitmap(BitmapHolder.get(ImgUtils.BITMAP_KEY));
         ViewGroup.LayoutParams lp = crop_img.getLayoutParams();
-        lp.width = screenWidth;
+        lp.width = width;
         lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         crop_img.setLayoutParams(lp);
-        crop_img.setMaxWidth(screenWidth);
-        crop_img.setMaxHeight(3*screenWidth);
+        crop_img.setMaxWidth(width);
+        crop_img.setMaxHeight(3*width);
 
+        photo_filter_recycler_view = (RecyclerView) findViewById(R.id.photo_philter_recycler_view);
         initHorizontalList();
-
         myHandler = new MyHandler(this);
     }
 
@@ -101,6 +97,7 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
         photo_filter_recycler_view.setHasFixedSize(true);
         bindDataToAdapter();
     }
+
 
     private void bindDataToAdapter() {
         final Context context = this.getApplication();
@@ -177,15 +174,15 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
         switch (v.getId()){
             case R.id.photo_edit_next:
                 Msg<String> msg = ImgUtils.saveEditImage(this,crop_img);
-                if(msg.MSG_TYPE == Msg.MSG_TYPE_SUCCESS){
+                if(msg.getMSG_TYPE() == Msg.MSG_TYPE_SUCCESS){
                     MediaTypeMessage message = new MediaTypeMessage();
                     message.setFileName(msg.getMsg());
                     message.setType(MediaTypeMessage.TYPE_SINGLE_PHOTO);
                     FeedsPublishActivity.start(PhotoEditActivity.this,message);
-                    Log.d(TAG,"Edit Success");
-                }else if(msg.MSG_TYPE == Msg.MSG_TYPE_FAILURE){}{
-                    Toast.makeText(this,"Edit Failure",Toast.LENGTH_SHORT).show();
-                    Log.d(TAG,"Edit Failed");
+                    Log.d(TAG,"Edit Success" + msg.getMSG_TYPE());
+                }else if(msg.getMSG_TYPE() == Msg.MSG_TYPE_FAILURE){
+                    Toast.makeText(this,"Edit Failure", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG,"Edit Failed" + msg.getMSG_TYPE());
                 }
                 break;
             default:
@@ -193,7 +190,7 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
         }
     }
 
-    private static class MyHandler extends Handler{
+    private  class MyHandler extends Handler{
         private WeakReference<PhotoEditActivity> mReference;
 
         private PhotoEditActivity activity;
@@ -215,6 +212,7 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
                     activity.crop_img.setLayoutParams(lp);
                     activity.crop_img.setMaxWidth(screenWidth);
                     activity.crop_img.setMaxHeight(3*screenWidth);
+                    break;
             }
         }
     }

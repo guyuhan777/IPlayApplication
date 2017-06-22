@@ -9,7 +9,11 @@ public class Msg<T> {
     public static final int MSG_TYPE_SUCCESS = 0;
     public static final int MSG_TYPE_FAILURE = 1;
 
-    public final int MSG_TYPE ;
+    public int getMSG_TYPE() {
+        return MSG_TYPE;
+    }
+
+    private int MSG_TYPE;
 
     public T getMsg() {
         return msg;
@@ -20,6 +24,8 @@ public class Msg<T> {
     }
 
     private T msg;
+
+
 
     public Msg(int type){
         MSG_TYPE = type;

@@ -43,8 +43,6 @@ public class ImgUtils {
         return bitmap;
     }
 
-
-
     public static Msg<String> saveEditImage(Context context,ImageView view){
         Msg<String> retMsg = new Msg<>(Msg.MSG_TYPE_FAILURE);
         String storePath = getStorePath();
