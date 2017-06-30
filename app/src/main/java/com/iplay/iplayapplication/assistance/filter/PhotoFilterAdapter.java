@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.iplay.iplayapplication.R;
+import com.iplay.iplayapplication.customComponent.autoChangeImageView.SquareImageView;
 
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class PhotoFilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public PhotoFilterViewHolder(View v) {
             super(v);
-            this.photoNail = (ImageView) v.findViewById(R.id.photonail);
+            this.photoNail = (SquareImageView) v.findViewById(R.id.photonail);
         }
     }
 }

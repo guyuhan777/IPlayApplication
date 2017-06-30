@@ -20,6 +20,7 @@
         android:layout_centerHorizontal="true"
         android:textSize="30sp"/>
     <ImageView
+        android:id="@+id/select_multi_photos"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:src="@drawable/yinyang"

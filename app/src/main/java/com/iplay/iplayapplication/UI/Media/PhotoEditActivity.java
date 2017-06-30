@@ -62,6 +62,8 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
         System.loadLibrary("NativeImageProcessor");
     }
 
+    private List<PhotoFilterItem> thumbs;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,8 +87,8 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
         crop_img.setMaxHeight(3*width);
 
         photo_filter_recycler_view = (RecyclerView) findViewById(R.id.photo_philter_recycler_view);
-        initHorizontalList();
         myHandler = new MyHandler(this);
+        initHorizontalList();
     }
 
     private void initHorizontalList() {
@@ -101,7 +103,6 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
 
     private void bindDataToAdapter() {
         final Context context = this.getApplication();
-        Handler handler = new Handler();
         Runnable r = new Runnable(){
             @Override
             public void run() {
@@ -139,14 +140,11 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
                 t6.filter = SampleFilters.getNightWhisperFilter();
                 PhotoFilterManager.addThumb(t6);
 
-                List<PhotoFilterItem> thumbs = PhotoFilterManager.processThumbs(context);
-
-                PhotoFilterAdapter adapter = new PhotoFilterAdapter(thumbs, PhotoEditActivity.this);
-                photo_filter_recycler_view.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+                thumbs = PhotoFilterManager.processThumbs(context);
+                myHandler.obtainMessage(1).sendToTarget();
             }
         };
-        handler.post(r);
+        new Thread(r).start();
     }
 
     public static void start(Context context,String fileName){
@@ -212,6 +210,11 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
                     activity.crop_img.setLayoutParams(lp);
                     activity.crop_img.setMaxWidth(screenWidth);
                     activity.crop_img.setMaxHeight(3*screenWidth);
+                    break;
+                case 1:
+                    PhotoFilterAdapter adapter = new PhotoFilterAdapter(thumbs, activity);
+                    photo_filter_recycler_view.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                     break;
             }
         }

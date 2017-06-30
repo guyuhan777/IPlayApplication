@@ -7,8 +7,10 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.iplay.iplayapplication.R;
 import com.iplay.iplayapplication.mActivity.MyActivity;
@@ -17,13 +19,15 @@ import com.iplay.iplayapplication.mActivity.MyActivity;
  * Created by admin on 2017/6/22.
  */
 
-public class FullScreenPicActivity extends MyActivity {
+public class FullScreenPicActivity extends MyActivity implements View.OnClickListener{
 
     private static final String SINGLE_PHOTO_KEY = "single_photo";
 
     private ImageView full_pic;
 
     private int width;
+
+    private TextView back_text;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +38,9 @@ public class FullScreenPicActivity extends MyActivity {
         String fileName = getIntent().getStringExtra(SINGLE_PHOTO_KEY);
         Bitmap bitmap = BitmapFactory.decodeFile(fileName);
         full_pic.setImageBitmap(bitmap);
+
+        back_text = (TextView) findViewById(R.id.full_screen_pic_back);
+        back_text.setOnClickListener(this);
         
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -45,6 +52,20 @@ public class FullScreenPicActivity extends MyActivity {
         full_pic.setLayoutParams(lp);
         full_pic.setMaxWidth(width);
         full_pic.setMaxHeight(3*width);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.full_screen_pic_back:
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        onBackPressed();
+                    }
+                });
+                break;
+        }
     }
 
     public static void start(Context context,String fileName){

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black">
+    <com.iplay.iplayapplication.customComponent.autoChangeImageView.SquareRelativeLayout
+        android:id="@+id/multi_photo_crop_field"
+        android:background="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.iplay.iplayapplication.customComponent.autoChangeImageView.TouchImageView
+            android:layout_centerInParent="true"
+            android:id="@+id/multi_photo_crop_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true" />
+    </com.iplay.iplayapplication.customComponent.autoChangeImageView.SquareRelativeLayout>
+</RelativeLayout>

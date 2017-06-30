@@ -67,6 +67,7 @@
     <LinearLayout
         android:id="@+id/feeds_media_container"
         android:layout_below="@id/content_publish_part"
+        android:background="@color/font_white"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

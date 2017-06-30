@@ -1,8 +1,9 @@
 package com.iplay.iplayapplication.assistance.filter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.Log;
+
+import com.iplay.iplayapplication.assistance.imageHelper.ImageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +29,11 @@ public class PhotoFilterManager {
     public static List<PhotoFilterItem> processThumbs(Context context) {
         for (PhotoFilterItem thumb : filterThumbs) {
             // scaling down the image
-            float image_width = 200 ;
+            /*float image_width = 200 ;
             float scale = image_width / thumb.image.getWidth();
             float image_height = thumb.image.getHeight() * scale;
-            Log.d(TAG,"image_width : " + image_width + " img_height : " + image_height);
-            thumb.image = Bitmap.createScaledBitmap(thumb.image, (int) image_width, (int) image_height, false);
+            Log.d(TAG,"image_width : " + image_width + " img_height : " + image_height);*/
+            thumb.image = ImageHelper.autoFitSquareBitmap(thumb.image,100);
             thumb.image = thumb.filter.processFilter(thumb.image);
             if(thumb.image!=null) {
                 Log.d(TAG, "filter success");

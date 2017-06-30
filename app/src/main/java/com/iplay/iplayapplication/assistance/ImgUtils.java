@@ -114,6 +114,7 @@ public class ImgUtils {
 
     public static Msg<String> saveImageToGallery(Context context, byte[] bmp,int type){
 
+        Log.d(TAG,"start transferring >>>>> currentTime " + System.currentTimeMillis());
         Msg<String> retMsg = null;
 
         String storePath = getStorePath();
@@ -123,25 +124,23 @@ public class ImgUtils {
         }
         String fileName = System.currentTimeMillis() + ".jpg";
         File file = new File(appDir, fileName);
-
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.RGB_565;
 
         Bitmap bitmap = BitmapFactory.decodeByteArray(bmp,0,bmp.length,options);
         bitmap = adJustPhotoRotation(bitmap, 90);
-
         if(type == CAMERA_FACE_BACK){
             bitmap = mirroXTranslate(bitmap);
         }
-
         BitmapHolder.set(BITMAP_KEY,bitmap);
+        Log.d(TAG,"end Transferring >>>>> currentTime " + System.currentTimeMillis());
         try{
-            /*FileOutputStream fos = new FileOutputStream(file);
+            FileOutputStream fos = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG,50,fos);
             fos.flush();
             fos.close();
             Uri uri = Uri.fromFile(file);
-            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));*/
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
             retMsg = new Msg<>(Msg.MSG_TYPE_SUCCESS,fileName);
             return retMsg;
         }catch (Exception e){

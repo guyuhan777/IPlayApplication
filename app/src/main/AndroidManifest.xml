@@ -44,6 +44,12 @@
         <activity android:name=".UI.HomePage.Remark.RemarkActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
+        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+        <activity android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name=".UI.Media.commonComponent.MultiPhotoFilterActivity" />
     </application>
 
 </manifest>

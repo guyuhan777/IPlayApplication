@@ -17,9 +17,9 @@ import com.iplay.iplayapplication.UI.Media.FullScreenPicActivity;
  * Created by admin on 2017/6/21.
  */
 
-public class FeedSinglePhotoFragment extends Fragment implements View.OnClickListener {
+public class FeedsSinglePhotoFragment extends Fragment implements View.OnClickListener {
 
-    private static final String TAG = "FeedSinglePhotoFragment";
+    private static final String TAG = "FeedsSinglePhotoFragment";
 
     private View view;
 
@@ -45,6 +45,8 @@ public class FeedSinglePhotoFragment extends Fragment implements View.OnClickLis
         Bitmap bitmap = BitmapFactory.decodeFile(fileName);
         singlePhoto.setImageBitmap(bitmap);
     }
+
+
 
     @Override
     public void onClick(View v) {

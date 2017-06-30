@@ -2,6 +2,7 @@ package com.iplay.iplayapplication.UI.SelfPage;
 
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -10,7 +11,13 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.iplay.iplayapplication.R;
 import com.iplay.iplayapplication.UI.HomePage.HomeFragement;
+import com.iplay.iplayapplication.UI.Media.commonComponent.MultiPhotoFilterActivity;
 import com.iplay.iplayapplication.mActivity.MyActivity;
+
+import java.util.List;
+
+import me.iwf.photopicker.PhotoPicker;
+import me.iwf.photopicker.PhotoPreview;
 
 
 /**
@@ -24,6 +31,8 @@ public class SelfMainPage extends MyActivity implements BottomNavigationBar.OnTa
     private SelfInfoFragment selfInfoFragment;
 
     private HomeFragement homeFragement;
+
+    private static final String TAG = "SelfMainPage";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,5 +80,21 @@ public class SelfMainPage extends MyActivity implements BottomNavigationBar.OnTa
     @Override
     public void onTabReselected(int position) {
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK &&
+                (requestCode == PhotoPicker.REQUEST_CODE || requestCode == PhotoPreview.REQUEST_CODE)){
+            List<String> photos = null;
+            if (data != null) {
+                photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+            }
+            for(int i = 0;i<photos.size();i++){
+                Log.d(TAG,"photo_url:" + photos.get(i));
+            }
+            MultiPhotoFilterActivity.start(this,photos);
+        }
     }
 }

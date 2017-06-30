@@ -20,4 +20,13 @@ public class BitmapHolder {
         map.put(key,value);
     }
 
+    public static Bitmap getBitmapCopy(String key){
+        Bitmap origin_bmp = get(key);
+        Bitmap copy_bmp = Bitmap.createBitmap(origin_bmp);
+        return copy_bmp;
+    }
+
+    public static void remove(String key){
+        map.remove(key);
+    }
 }

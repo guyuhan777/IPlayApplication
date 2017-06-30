@@ -19,9 +19,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.iplay.iplayapplication.R;
+import com.iplay.iplayapplication.UI.HomePage.Activity.FeedsPublishActivity;
 import com.iplay.iplayapplication.assistance.ImgUtils;
 import com.iplay.iplayapplication.customComponent.doubleWayProgressBar.BothWayProgressBar;
 import com.iplay.iplayapplication.mActivity.MyActivity;
+import com.iplay.iplayapplication.message.MediaTypeMessage;
 import com.iplay.iplayapplication.util.Msg;
 
 import java.io.File;
@@ -124,9 +126,11 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
                 break;
             case R.id.take_photo_button:
                 if(currentType == TAKE_PHOTO_TYPE) {
+                    Log.d(TAG,"start auto focus >>>>> currentTime " + System.currentTimeMillis());
                     camera.autoFocus(new Camera.AutoFocusCallback() {
                         @Override
                         public void onAutoFocus(boolean success, Camera camera) {
+                            Log.d(TAG,"end auto focus >>>>> currentTime " + System.currentTimeMillis());
                             camera.takePicture(null, null, mPicture);
                         }
                     });
@@ -416,6 +420,7 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
                 // TODO: 2016/10/20 临时写个文件地址, 稍候该!!!
                 File targetDir = Environment.
                         getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+
                 mTargetFile = new File(targetDir,
                         SystemClock.currentThreadTimeMillis() + ".mp4");
                 mMediaRecorder.setOutputFile(mTargetFile.getAbsolutePath());
@@ -446,6 +451,10 @@ public class CameraActivity extends MyActivity implements View.OnClickListener,V
             mMediaRecorder.stop();
             isRecording = false;
             Toast.makeText(this, "视频已经放至" + mTargetFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+            MediaTypeMessage message = new MediaTypeMessage();
+            message.setFileName(mTargetFile.getAbsolutePath());
+            message.setType(MediaTypeMessage.TYPE_VIDEO);
+            FeedsPublishActivity.start(CameraActivity.this,message);
         }
         isRunning = false;
     }
