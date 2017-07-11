@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 
 import com.iplay.iplayapplication.R;
 import com.iplay.iplayapplication.assistance.imageHelper.ImageHelper;
+import com.iplay.iplayapplication.customComponent.autoChangeImageView.SquareRelativeLayout;
 import com.iplay.iplayapplication.customComponent.autoChangeImageView.TouchImageView;
 
 /**
@@ -22,6 +23,8 @@ public class MultiPhotoCropperItem extends RelativeLayout {
 
     public TouchImageView crop_photo;
 
+    public SquareRelativeLayout crop_field;
+
     private View view;
 
     public MultiPhotoCropperItem(Context context) {
@@ -29,6 +32,7 @@ public class MultiPhotoCropperItem extends RelativeLayout {
         mContext = context;
         view = LayoutInflater.from(context).inflate(R.layout.crop_photo_pager_item,this,true);
         crop_photo = (TouchImageView) view.findViewById(R.id.multi_photo_crop_img);
+        crop_field = (SquareRelativeLayout) view.findViewById(R.id.multi_photo_crop_field);
     }
 
     private Context mContext;

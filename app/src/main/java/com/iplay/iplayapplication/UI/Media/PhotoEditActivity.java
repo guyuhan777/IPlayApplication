@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +23,8 @@ import com.iplay.iplayapplication.assistance.filter.PhotoFilterAdapter;
 import com.iplay.iplayapplication.assistance.filter.PhotoFilterCallBack;
 import com.iplay.iplayapplication.assistance.filter.PhotoFilterItem;
 import com.iplay.iplayapplication.assistance.filter.PhotoFilterManager;
+import com.iplay.iplayapplication.assistance.imageHelper.ImageHelper;
+import com.iplay.iplayapplication.customComponent.autoChangeImageView.SquareRelativeLayout;
 import com.iplay.iplayapplication.customComponent.autoChangeImageView.TouchImageView;
 import com.iplay.iplayapplication.mActivity.MyActivity;
 import com.iplay.iplayapplication.message.MediaTypeMessage;
@@ -58,6 +59,8 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
 
     private Thread filterThreaad;
 
+    private SquareRelativeLayout crop_field;
+
     static {
         System.loadLibrary("NativeImageProcessor");
     }
@@ -69,6 +72,8 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.crop_layout);
 
+        crop_field = (SquareRelativeLayout) findViewById(R.id.crop_field);
+
         edit_button = (TextView) findViewById(R.id.photo_edit_next);
         edit_button.setOnClickListener(this);
 
@@ -78,14 +83,7 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
 
         crop_img = (TouchImageView) findViewById(R.id.crop_img);
 
-        crop_img.setImageBitmap(BitmapHolder.get(ImgUtils.BITMAP_KEY));
-        ViewGroup.LayoutParams lp = crop_img.getLayoutParams();
-        lp.width = width;
-        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        crop_img.setLayoutParams(lp);
-        crop_img.setMaxWidth(width);
-        crop_img.setMaxHeight(3*width);
-
+        ImageHelper.autoFitBitmap2Image(crop_img,BitmapHolder.get(ImgUtils.BITMAP_KEY),width);
         photo_filter_recycler_view = (RecyclerView) findViewById(R.id.photo_philter_recycler_view);
         myHandler = new MyHandler(this);
         initHorizontalList();
@@ -171,7 +169,7 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.photo_edit_next:
-                Msg<String> msg = ImgUtils.saveEditImage(this,crop_img);
+                Msg<String> msg = ImgUtils.saveEditImage(getApplicationContext(),crop_field,width);
                 if(msg.getMSG_TYPE() == Msg.MSG_TYPE_SUCCESS){
                     MediaTypeMessage message = new MediaTypeMessage();
                     message.setFileName(msg.getMsg());
@@ -202,14 +200,7 @@ public class PhotoEditActivity extends MyActivity implements View.OnClickListene
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 0:
-                    activity.crop_img.setImageBitmap(activity.tempBitmap);
-                    int screenWidth = activity.width;
-                    ViewGroup.LayoutParams lp = activity.crop_img.getLayoutParams();
-                    lp.width = screenWidth;
-                    lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    activity.crop_img.setLayoutParams(lp);
-                    activity.crop_img.setMaxWidth(screenWidth);
-                    activity.crop_img.setMaxHeight(3*screenWidth);
+                    ImageHelper.autoFitBitmap2Image(activity.crop_img,activity.tempBitmap,activity.width);
                     break;
                 case 1:
                     PhotoFilterAdapter adapter = new PhotoFilterAdapter(thumbs, activity);

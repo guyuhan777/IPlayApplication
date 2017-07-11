@@ -16,15 +16,19 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.iplay.iplayapplication.R;
+import com.iplay.iplayapplication.assistance.ImgUtils;
 import com.iplay.iplayapplication.assistance.filter.PhotoFilterAdapter;
 import com.iplay.iplayapplication.assistance.filter.PhotoFilterCallBack;
 import com.iplay.iplayapplication.assistance.filter.PhotoFilterItem;
 import com.iplay.iplayapplication.assistance.filter.PhotoFilterManager;
 import com.iplay.iplayapplication.assistance.imageHelper.ImageHelper;
 import com.iplay.iplayapplication.mActivity.MyActivity;
+import com.iplay.iplayapplication.util.Msg;
 import com.zomato.photofilters.SampleFilters;
 import com.zomato.photofilters.imageprocessors.Filter;
 
@@ -44,13 +48,21 @@ public class MultiPhotoFilterActivity extends MyActivity implements ViewPager.On
 
     private static final String TAG = "MPFActivity";
 
+    private TextView next_photo;
+
+    private TextView last_photo;
+
     private ViewPager photoViewPager;
 
     private static final String SELECTED_PHOTO_KEY = "selected_photo_key";
 
-    private static final int HANDLE_MESSAGE_INIT_ADAPTER = 0;
+    private static final int HANDLE_FILTER_REQUEST = 0;
+
+    private static final int HANDLE_ADAPTER_GENERATE_REQUEST = 1;
 
     private String[] selectedPhotos;
+
+    private int checked[];
 
     private Handler photoInitHandler;
 
@@ -60,17 +72,13 @@ public class MultiPhotoFilterActivity extends MyActivity implements ViewPager.On
 
     private int width;
 
+    private int size;
+
     private int currentIndex = 0;
 
     private RecyclerView filter_recycler_view;
 
-    private int size;
-
-    //private PhotoFilterAdapter[] adapters;
-
     private List<PhotoFilterItem> photoFilter;
-
-    //private ConcurrentHashMap<String,List<PhotoFilterItem>> photoFilterMap;
 
     private TextView multi_filter_next_button;
 
@@ -84,6 +92,13 @@ public class MultiPhotoFilterActivity extends MyActivity implements ViewPager.On
         setContentView(R.layout.multi_photo_filter_layout);
 
         multi_filter_next_button = (TextView)findViewById(R.id.multi_photo_edit_next);
+        multi_filter_next_button.setOnClickListener(this);
+
+        next_photo = (TextView) findViewById(R.id.next_photo);
+        next_photo.setOnClickListener(this);
+
+        last_photo = (TextView) findViewById(R.id.pre_photo);
+        last_photo.setOnClickListener(this);
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -92,8 +107,8 @@ public class MultiPhotoFilterActivity extends MyActivity implements ViewPager.On
 
         selectedPhotos = getIntent().getStringArrayExtra(SELECTED_PHOTO_KEY);
         size = selectedPhotos.length;
-        //adapters = new PhotoFilterAdapter[size];
-        //photoFilterMap = new ConcurrentHashMap<>();
+        checked = new int[size];
+
 
         filter_recycler_view = (RecyclerView) findViewById(R.id.multi_photo_filter_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -141,7 +156,7 @@ public class MultiPhotoFilterActivity extends MyActivity implements ViewPager.On
                 PhotoFilterManager.addThumb(t5);
 
                 photoFilter = PhotoFilterManager.processThumbs(getApplicationContext());
-                filterInitHandler.obtainMessage(1,new Integer(position)).sendToTarget();
+                filterInitHandler.obtainMessage(HANDLE_ADAPTER_GENERATE_REQUEST,new Integer(position)).sendToTarget();
             }
         });
         adapterChangeThread.start();
@@ -184,6 +199,7 @@ public class MultiPhotoFilterActivity extends MyActivity implements ViewPager.On
                 };
                 photoViewPager.setAdapter(photoAdapter);
                 photoViewPager.setOnPageChangeListener(MultiPhotoFilterActivity.this);
+                checked[0] = 1;
             }
         };
         photoInitHandler.post(r);
@@ -200,14 +216,29 @@ public class MultiPhotoFilterActivity extends MyActivity implements ViewPager.On
         context.startActivity(intent);
     }
 
+    private boolean isAllchecked(){
+        boolean ret = true;
+        for (int i = 0 ; i<checked.length ; i++){
+            if(checked[i] != 1){
+                ret = false;
+            }
+        }
+        return ret;
+    }
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
 
+
     @Override
     public void onPageSelected(int position) {
         currentIndex = position;
+        checked[position] = 1;
+        if(isAllchecked()){
+            multi_filter_next_button.setTextColor(getResources().getColor(R.color.blue_hint));
+        }
         changeAdapter(position);
     }
 
@@ -226,7 +257,7 @@ public class MultiPhotoFilterActivity extends MyActivity implements ViewPager.On
                 originBitmap = ImageHelper.getScaledBitmap(originBitmap,width);
                 currentBitmap = filter.processFilter(originBitmap);
                 Log.d(TAG,"on Photo Filter");
-                filterInitHandler.obtainMessage(0).sendToTarget();
+                filterInitHandler.obtainMessage(HANDLE_FILTER_REQUEST).sendToTarget();
             }
         });
         filterThread.start();
@@ -234,7 +265,39 @@ public class MultiPhotoFilterActivity extends MyActivity implements ViewPager.On
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()){
+            case R.id.multi_photo_edit_next:
+                if(!isAllchecked()){
+                    Toast.makeText(getApplicationContext(),"You haven't edit all of the photos",Toast.LENGTH_SHORT).show();
+                }else {
+                    if(cropperItems != null){
+                        List<RelativeLayout> cropFields = new ArrayList<>();
+                        for (int i = 0 ; i < cropperItems.size() ; i ++){
+                            cropFields.add(cropperItems.get(i).crop_field);
+                        }
+                        Msg<List<String>> msg = ImgUtils.saveEditImages(getApplicationContext(),cropFields,width);
+                        if(msg.getMSG_TYPE() == Msg.MSG_TYPE_FAILURE){
+                            Toast.makeText(getApplicationContext(), "Error happened when saving all the photos", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(getApplicationContext(),"Save all photos successfully",Toast.LENGTH_SHORT).show();
+                            for ( int i = 0; i<msg.getMsg().size();i++){
+                                Log.d(TAG,"filepath : " + msg.getMsg().get(i));
+                            }
+                        }
+                    }
+                }
+                break;
+            case R.id.next_photo:
+                if(currentIndex + 1 <= size){
+                    photoViewPager.setCurrentItem(currentIndex + 1);
+                }
+                break;
+            case R.id.pre_photo:
+                if(currentIndex - 1 >= 0){
+                    photoViewPager.setCurrentItem(currentIndex - 1);
+                }
+                break;
+        }
     }
 
     private class MyHandler extends Handler{
@@ -251,15 +314,13 @@ public class MultiPhotoFilterActivity extends MyActivity implements ViewPager.On
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case 0:
+                case HANDLE_FILTER_REQUEST:
                     MultiPhotoCropperItem cropperItem = cropperItems.get(currentIndex);
                     Log.d(TAG,"on Bitmap receive");
                     ImageHelper.autoFitBitmap2Image(cropperItem.crop_photo,currentBitmap,width);
                     photoAdapter.notifyDataSetChanged();
                     break;
-                case 1:
-                    /*int position = (Integer) msg.obj;
-                    String photoPath = selectedPhotos[position];*/
+                case HANDLE_ADAPTER_GENERATE_REQUEST:
                     PhotoFilterAdapter adapter = new PhotoFilterAdapter(photoFilter,mActivity);
                     mActivity.filter_recycler_view.setAdapter(adapter);
                     adapter.notifyDataSetChanged();

@@ -8,13 +8,16 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.iplay.iplayapplication.util.Msg;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by admin on 2017/6/8.
@@ -37,13 +40,45 @@ public class ImgUtils {
         return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator+"iplay";
     }
 
-    public static Bitmap convertViewToMap(ImageView view){
-        view.setDrawingCacheEnabled(true);
+    public static Bitmap convertViewToMap(RelativeLayout view, int width){
+        //view.layout(0, 0, width, width);
+        /*view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap bitmap = view.getDrawingCache();*/
+        while(!view.isDrawingCacheEnabled()){
+            view.setDrawingCacheEnabled(true);
+        }
+        view.layout(0, 0, width, width);
+        view.buildDrawingCache();
         Bitmap bitmap = view.getDrawingCache();
         return bitmap;
     }
 
-    public static Msg<String> saveEditImage(Context context,ImageView view){
+    public static Msg<List<String>> saveEditImages(Context context, Collection<RelativeLayout> views,int width){
+        Msg<List<String>> retMsg = new Msg<>(Msg.MSG_TYPE_FAILURE);
+
+        List<String> fileNameList = new ArrayList<>();
+
+        boolean isAllSaved = true;
+
+        for(RelativeLayout view:views){
+            Msg<String> msg = saveEditImage(context,view,width);
+            if(msg.getMSG_TYPE() == Msg.MSG_TYPE_SUCCESS){
+                fileNameList.add(msg.getMsg());
+            }else{
+                isAllSaved = false;
+            }
+        }
+
+        if(isAllSaved){
+            retMsg = new Msg<>(Msg.MSG_TYPE_SUCCESS);
+            retMsg.setMsg(fileNameList);
+        }
+
+        return retMsg;
+    }
+
+    public static Msg<String> saveEditImage(Context context,RelativeLayout view,int width){
         Msg<String> retMsg = new Msg<>(Msg.MSG_TYPE_FAILURE);
         String storePath = getStorePath();
         File appDir = new File(storePath);
@@ -53,7 +88,7 @@ public class ImgUtils {
         String fileName = System.currentTimeMillis() + ".jpg";
         File file = new File(appDir, fileName);
 
-        Bitmap bitmap = convertViewToMap(view);
+        Bitmap bitmap = convertViewToMap(view,width);
 
         FileOutputStream fos = null;
 
@@ -64,8 +99,8 @@ public class ImgUtils {
             fos.close();
             Uri uri = Uri.fromFile(file);
             context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
-            fos = null;
             view.setDrawingCacheEnabled(false);
+            fos = null;
             retMsg = new Msg<>(Msg.MSG_TYPE_SUCCESS);
             retMsg.setMsg(storePath+"/"+fileName);
             return retMsg;
